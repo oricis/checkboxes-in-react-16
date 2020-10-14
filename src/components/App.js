@@ -1,112 +1,62 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Checkbox from "./Checkbox";
 
-const OPTIONS = ["One", "Two", "Three"];
-
-class App extends Component {
-  state = {
-    /*checkboxes: OPTIONS.reduce(
-      (options, option) => ({
-        ...options,
-        [option]: false
-      }),
-      {}
-    )*/
-    checkboxes: {
-      "One": false,
-      "Two": false,
-      "Three": false
+function App()
+{
+    const checkboxes = {
+        "One": false,
+        "Two": false,
+        "Three": false
     }
-  };
+    const [options, setOptions] = useState(checkboxes)
 
-  selectAllCheckboxes = isSelected => {
 
-    Object.keys(this.state.checkboxes).forEach(checkbox => {
-      // BONUS:
-      // Can you explain why we pass updater function to setState instead of an object?
-      this.setState(prevState => ({
-        checkboxes: {
-          ...prevState.checkboxes,
-          [checkbox]: isSelected
-        }
-      }));
-    }); /**/
-  };
+    const selectAllCheckboxes = isSelected => {
+        const newCheckboxes = JSON.parse(JSON.stringify(checkboxes));
+        Object.keys(checkboxes).map((key, value) => {
+            newCheckboxes[key] = isSelected;
+        });
 
-  selectAll = () => this.selectAllCheckboxes(true);
+        setOptions(newCheckboxes);
+    };
 
-  deselectAll = () => this.selectAllCheckboxes(false);
+    const selectAll = () => selectAllCheckboxes(true);
 
-  handleCheckboxChange = changeEvent => {
-    const { name } = changeEvent.target;
+    const deselectAll = () => selectAllCheckboxes(false);
 
-    this.setState(prevState => ({
-      checkboxes: {
-        ...prevState.checkboxes,
-        [name]: !prevState.checkboxes[name]
-      }
-    }));
-  };
+    const handleCheckboxChange = changeEvent => {
+        console.log('clicked ' + changeEvent.target)
+    };
 
-  handleFormSubmit = formSubmitEvent => {
-    formSubmitEvent.preventDefault();
+    const createCheckbox = option => (
+        <Checkbox
+            label={option}
+            isSelected={options[option]}
+            onCheckboxChange={handleCheckboxChange}
+            key={option}
+        />
+    );
 
-    Object.keys(this.state.checkboxes)
-      .filter(checkbox => this.state.checkboxes[checkbox])
-      .forEach(checkbox => {
-        console.log(checkbox, "is selected.");
-      });
-  };
-
-  createCheckbox = option => (
-    <Checkbox
-      label={option}
-      isSelected={this.state.checkboxes[option]}
-      onCheckboxChange={this.handleCheckboxChange}
-      key={option}
-    />
-  );
-
-  createCheckboxes = () => OPTIONS.map(this.createCheckbox);
-
-  render() {
-    // HACK: traces
-    if (this.state !== undefined && this.state.checkboxes !== undefined) {
-      console.log(this.state.checkboxes)
-    }
+    const createCheckboxes = () => Object.keys(checkboxes).map(createCheckbox);
 
     return (
-      <div className="container">
-        <div className="row mt-5">
-          <div className="col-sm-12">
-            <form onSubmit={this.handleFormSubmit}>
-              {this.createCheckboxes()}
+        <form>
+            {createCheckboxes()}
 
-              <div className="form-group mt-2">
+            <div className="form-group mt-2">
                 <button
-                  type="button"
-                  className="btn btn-outline-primary mr-2"
-                  onClick={this.selectAll}
-                >
-                  Select All
-                </button>
+                    type="button"
+                    className="btn btn-outline-primary mr-2"
+                    onClick={selectAll}
+                >Select All</button>
                 <button
-                  type="button"
-                  className="btn btn-outline-primary mr-2"
-                  onClick={this.deselectAll}
-                >
-                  Deselect All
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+                    type="button"
+                    className="btn btn-outline-primary mr-2"
+                    onClick={deselectAll}
+                >Deselect All</button>
+            </div>
+        </form>
     );
-  }
 }
 
 export default App;
