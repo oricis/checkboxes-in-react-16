@@ -5,25 +5,32 @@ const OPTIONS = ["One", "Two", "Three"];
 
 class App extends Component {
   state = {
-    checkboxes: OPTIONS.reduce(
+    /*checkboxes: OPTIONS.reduce(
       (options, option) => ({
         ...options,
         [option]: false
       }),
       {}
-    )
+    )*/
+    checkboxes: {
+      "One": false,
+      "Two": false,
+      "Three": false
+    }
   };
 
   selectAllCheckboxes = isSelected => {
+
     Object.keys(this.state.checkboxes).forEach(checkbox => {
-      // BONUS: Can you explain why we pass updater function to setState instead of an object?
+      // BONUS:
+      // Can you explain why we pass updater function to setState instead of an object?
       this.setState(prevState => ({
         checkboxes: {
           ...prevState.checkboxes,
           [checkbox]: isSelected
         }
       }));
-    });
+    }); /**/
   };
 
   selectAll = () => this.selectAllCheckboxes(true);
@@ -63,6 +70,11 @@ class App extends Component {
   createCheckboxes = () => OPTIONS.map(this.createCheckbox);
 
   render() {
+    // HACK: traces
+    if (this.state !== undefined && this.state.checkboxes !== undefined) {
+      console.log(this.state.checkboxes)
+    }
+
     return (
       <div className="container">
         <div className="row mt-5">
