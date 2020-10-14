@@ -1,6 +1,7 @@
 # Simple example of how to create checkboxes in React 16
 
 In branch master the example use classes
+
 In hook branch the same example with hooks
 
 
